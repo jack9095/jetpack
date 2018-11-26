@@ -1,0 +1,1 @@
+include ':app', ':drouter-api', ':drouter-compiler', ':drouter-base', ':base-core', ':login-module', ':circle-module', ':routeapp'
