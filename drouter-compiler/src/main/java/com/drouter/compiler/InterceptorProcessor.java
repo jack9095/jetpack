@@ -30,10 +30,8 @@ import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 
 /**
+ * 每一个注解处理器继承抽象处理器
  * description: 拦截器的处理器
- * author: Darren on 2018/1/22 12:29
- * email: 240336124@qq.com
- * version: 1.0
  */
 @AutoService(Processor.class)
 public class InterceptorProcessor extends AbstractProcessor {

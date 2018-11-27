@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -94,5 +95,15 @@ public class MainActivity extends AppCompatActivity implements ICommonView,Handl
                 break;
         }
         return false;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 }

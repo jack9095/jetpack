@@ -30,9 +30,6 @@ import javax.tools.Diagnostic;
 
 /**
  * description: 模块的处理器
- * author: Darren on 2018/1/22 12:29
- * email: 240336124@qq.com
- * version: 1.0
  */
 @AutoService(Processor.class)
 public class ModuleProcessor extends AbstractProcessor {
