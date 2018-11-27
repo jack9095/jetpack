@@ -2,10 +2,10 @@ package com.example.fly.jetpack.module;
 
 import com.example.fly.jetpack.annotation.ActivityScope;
 import com.example.fly.jetpack.view.ICommonView;
-import dagger.Module;
-import dagger.Provides;
+//import dagger.Module;
+//import dagger.Provides;
 
-@Module
+//@Module
 public class CommonModule {
 
     private ICommonView iview;
@@ -14,7 +14,7 @@ public class CommonModule {
         this.iview = iview;
     }
 
-    @Provides
+//    @Provides
     @ActivityScope
     public ICommonView provideICommonView() {
         return this.iview;
