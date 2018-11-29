@@ -22,6 +22,7 @@ import javax.lang.model.util.Types;
  * 每一个注解处理器继承抽象处理器
  * description: 写一个测试的处理器
  * https://www.jianshu.com/p/07ef8ba80562
+ * https://blog.csdn.net/u010405231/article/details/52210401
  */
 @AutoService(Processor.class)  // 这是一个注解处理器，是Google开发的，用来生成META-INF/services/javax.annotation.processing.Processor文件的
 public class TestProcessor extends AbstractProcessor {

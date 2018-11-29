@@ -4,7 +4,10 @@ import com.google.auto.service.AutoService;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -16,16 +19,26 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
 /**
+ * 编译器在编译时自动查找所有继承自AbstractProcessor的类，然后调用他们的process方法去处理
  * 每一个注解处理器继承抽象处理器
  * 写一个测试的处理器
+ * https://blog.csdn.net/u010405231/article/details/52210401
+ * 详细介绍注解中的各个类的作用
+ * https://blog.csdn.net/qq_30379689/article/details/82345625
+ * JavaPoet的基本使用
+ * https://blog.csdn.net/coderder/article/details/79989061
  */
 @AutoService(Processor.class)
 public class MyProcessor extends AbstractProcessor {
@@ -40,11 +53,12 @@ public class MyProcessor extends AbstractProcessor {
 
     // 正如这个名字所示，使用Filer你可以创建文件
     private Filer mFiler;
-    private Messager mMessager;
+    private Messager mMessager;  // Log 日志
 
     /**
      * 这里有一个特殊的init()方法，它会被注解处理工具调用，并输入ProcessingEnviroment参数。
      * ProcessingEnviroment提供很多有用的工具类Elements,Types和Filer
+     *
      * @param processingEnvironment
      */
     @Override
@@ -62,6 +76,7 @@ public class MyProcessor extends AbstractProcessor {
      * 用来指定你使用的Java版本。通常这里返回SourceVersion.latestSupported()。
      * 然而，如果你有足够的理由只支持Java 7的话，你也可以返回SourceVersion.RELEASE_7
      * 推荐使用前者
+     *
      * @return
      */
     @Override
@@ -74,6 +89,7 @@ public class MyProcessor extends AbstractProcessor {
     /**
      * 这里你必须指定，这个注解处理器是注册给哪个注解的。
      * 注意，它的返回值是一个字符串的集合，包含本处理器想要处理的注解类型的合法全称。换句话说，你在这里定义你的注解处理器注册到哪些注解上
+     *
      * @return
      */
     @Override
@@ -87,6 +103,7 @@ public class MyProcessor extends AbstractProcessor {
     /**
      * 这相当于每个处理器的主函数main()。你在这里写你的扫描、评估和处理注解的代码，以及生成Java文件。
      * 输入参数RoundEnviroment，可以让你查询出包含特定注解的被注解元素。后面我们将看到详细的内容
+     *
      * @param set
      * @param roundEnvironment
      * @return
@@ -120,6 +137,65 @@ public class MyProcessor extends AbstractProcessor {
             }
             //解析，并生成代码
             analysisAnnotated(annotatedElement);
+
+
+
+
+            //ElementType.TYPE注解可以直接强转TypeElement
+            TypeElement classElement = (TypeElement) annotatedElement;
+
+            PackageElement packageElement = (PackageElement) annotatedElement
+                    .getEnclosingElement();
+
+            //全类名
+            String fullClassName = classElement.getQualifiedName().toString();
+            //类名
+            String className = classElement.getSimpleName().toString();
+            //包名
+            String packageName = packageElement.getQualifiedName().toString();
+            //父类名
+            String superClassName = classElement.getSuperclass().toString();
+
+
+            //对于Element直接强转
+//            ExecutableElement executableElement = (ExecutableElement) annotatedElement;
+//
+//            //非对应的Element，通过getEnclosingElement转换获取
+//            TypeElement classElement = (TypeElement) annotatedElement
+//                    .getEnclosingElement();
+//
+//            //当(ExecutableElement) element成立时，使用(PackageElement) element
+//            //            .getEnclosingElement();将报错。
+//            //需要使用elementUtils来获取
+//            Elements elementUtils = processingEnv.getElementUtils();
+//            PackageElement packageElement = elementUtils.getPackageOf(classElement);
+//
+//            //全类名
+//            String fullClassName = classElement.getQualifiedName().toString();
+//            //类名
+//            String className = classElement.getSimpleName().toString();
+//            //包名
+//            String packageName = packageElement.getQualifiedName().toString();
+//            //方法名
+//            String methodName = executableElement.getSimpleName().toString();
+//
+//            //取得方法参数列表
+//            List<? extends VariableElement> methodParameters = executableElement.getParameters();
+//            //参数类型列表
+//            List<String> types = new ArrayList<>();
+//            for (VariableElement variableElement : methodParameters) {
+//                TypeMirror methodParameterType = variableElement.asType();
+//                if (methodParameterType instanceof TypeVariable) {
+//                    TypeVariable typeVariable = (TypeVariable) methodParameterType;
+////                    methodParameterType = typeVariable.getUpperBound();
+//
+//                }
+//                //参数名
+//                String parameterName = variableElement.getSimpleName().toString();
+//                //参数类型
+//                String parameteKind = methodParameterType.toString();
+//                types.add(methodParameterType.toString());
+//            }
         }
 
         return true;
@@ -130,6 +206,10 @@ public class MyProcessor extends AbstractProcessor {
 
     /**
      * 编写解析和生成的代码格式
+     * 以上的连接字符串工作，可以使用JavaPoet开源库进行编写，提升效率。
+     * <p>
+     * compile 'com.squareup:javapoet:1.7.0'
+     *
      * @param classElement
      */
     private void analysisAnnotated(Element classElement) {
@@ -173,6 +253,7 @@ public class MyProcessor extends AbstractProcessor {
 
     /**
      * 日志和错误信息打印
+     *
      * @param e
      * @param msg
      * @param args
@@ -186,6 +267,7 @@ public class MyProcessor extends AbstractProcessor {
 
     /**
      * 日志信息打印
+     *
      * @param msg
      * @param args
      */
