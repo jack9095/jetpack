@@ -9,9 +9,11 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/annotationTest" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/base-core" />
             <option value="$PROJECT_DIR$/circle-module" />
+            <option value="$PROJECT_DIR$/compiler" />
             <option value="$PROJECT_DIR$/drouter-api" />
             <option value="$PROJECT_DIR$/drouter-base" />
             <option value="$PROJECT_DIR$/drouter-compiler" />

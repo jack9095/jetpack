@@ -1,5 +1,8 @@
 package com.drouter.compiler;
 
+import com.drouter.base.annotation.Action;
+import com.google.auto.service.AutoService;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -7,8 +10,10 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -18,12 +23,18 @@ import javax.lang.model.util.Types;
  * description: 写一个测试的处理器
  * https://www.jianshu.com/p/07ef8ba80562
  */
+@AutoService(Processor.class)  // 这是一个注解处理器，是Google开发的，用来生成META-INF/services/javax.annotation.processing.Processor文件的
 public class TestProcessor extends AbstractProcessor {
 
 //    每一个注解处理器类都必须有一个空的构造函数
 
+    // 一个用来处理TypeMirror的工具类
     private Types mTypeUtils;
+
+    // 一个用来处理Element的工具类，源代码的每一个部分都是一个特定类型的Element
     private Elements mElementUtils;
+
+    // 正如这个名字所示，使用Filer你可以创建文件
     private Filer mFiler;
     private Messager mMessager;
 
@@ -53,6 +64,13 @@ public class TestProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         //这里开始处理我们的注解解析了，以及生成Java文件
+
+
+        // 遍历所有被注解了@Factory的元素   Element可以是类、方法、变量等
+        for (Element annotatedElement : roundEnvironment.getElementsAnnotatedWith(Action.class)) {
+
+        }
+
         return false;
     }
 
