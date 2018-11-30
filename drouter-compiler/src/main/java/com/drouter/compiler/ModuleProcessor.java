@@ -157,10 +157,10 @@ public class ModuleProcessor extends AbstractProcessor {
         classBuilder.addMethod(constructorMethodBuilder.build());
         classBuilder.addMethod(unbindMethodBuilder.build());
 
-        // 生成类，看下效果
+        // 生成类，看下效果 在包com.drouter.assist.module下面生成
         try {
             JavaFile.builder(Consts.ROUTER_MODULE_PACK_NAME, classBuilder.build())
-                    .addFileComment("FRouter 自动生成")
+                    .addFileComment("DRouter 自动生成")
                     .build().writeTo(mFiler);
         } catch (IOException e) {
             e.printStackTrace();

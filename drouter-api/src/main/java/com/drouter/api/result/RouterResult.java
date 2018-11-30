@@ -2,9 +2,6 @@ package com.drouter.api.result;
 
 /**
  * description: 路由的返回结果
- * author: Darren on 2018/1/22 10:35
- * email: 240336124@qq.com
- * version: 1.0
  */
 public class RouterResult {
     static final int SUCCEED_CODE = 0x000011;

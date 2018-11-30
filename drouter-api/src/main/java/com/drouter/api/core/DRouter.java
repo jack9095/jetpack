@@ -4,8 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
-import android.widget.Toast;
-
 import com.drouter.api.action.IRouterAction;
 import com.drouter.api.action.IRouterInterceptor;
 import com.drouter.api.action.IRouterModule;
@@ -20,7 +18,7 @@ import com.drouter.api.interceptor.CallActionInterceptor;
 import com.drouter.api.interceptor.ErrorActionInterceptor;
 import com.drouter.api.thread.PosterSupport;
 import com.drouter.api.utils.ClassUtils;
-
+import com.drouter.api.utils.ModuleUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,9 +27,6 @@ import java.util.Map;
 
 /**
  * description:
- * author: Darren on 2018/1/22 09:59
- * email: 240336124@qq.com
- * version: 1.0
  */
 public class DRouter {
     // 是否被初始化
@@ -144,21 +139,26 @@ public class DRouter {
     }
 
 
+    /**
+     *
+     * @param actionName
+     * @return
+     */
     public RouterForward action(String actionName) {
         // 1. 动态先查找加载 Module
         // actionName 的格式必须是 xxx/xxx
-        if (!actionName.contains("/")) {
+        if (!actionName.contains("/")) {  // 中断，去中转
             String message = "action name  format error -> <" + actionName + ">, like: moduleName/actionName";
-            debugMessage(message);
+            ModuleUtils.debugMessage(message,debuggable,logger,mApplicationContext);
             return new RouterForward(new ErrorActionWrapper(), interceptors);
         }
 
         // 2.获取 moduleName，实例化 Module，并缓存
         String moduleName = actionName.split("/")[0];
-        String moduleClassName = searchModuleClassName(moduleName);
+        String moduleClassName = ModuleUtils.searchModuleClassName(moduleName,mAllModuleClassName);
         if (TextUtils.isEmpty(moduleClassName)) {
             String message = String.format("Please check to the action name is correct: according to the <%s> cannot find module %s.", actionName, moduleName);
-            debugMessage(message);
+            ModuleUtils.debugMessage(message,debuggable,this.logger,this.mApplicationContext);
             return new RouterForward(new ErrorActionWrapper(), interceptors);
         }
         IRouterModule routerModule = cacheRouterModules.get(moduleClassName);
@@ -170,7 +170,7 @@ public class DRouter {
             } catch (Exception e) {
                 e.printStackTrace();
                 String message = "instance module error: " + e.getMessage();
-                debugMessage(message);
+                ModuleUtils.debugMessage(message,debuggable,logger,mApplicationContext);
                 return new RouterForward(new ErrorActionWrapper(), interceptors);
             }
         }
@@ -185,7 +185,7 @@ public class DRouter {
 
         if (actionWrapper == null) {
             String message = String.format("Please check to the action name is correct: according to the <%s> cannot find action.", actionName);
-            debugMessage(message);
+            ModuleUtils.debugMessage(message,debuggable,logger,mApplicationContext);
             return new RouterForward(new ErrorActionWrapper(), interceptors);
         }
 
@@ -195,7 +195,7 @@ public class DRouter {
             try {
                 if (!IRouterAction.class.isAssignableFrom(actionClass)) {
                     String message = actionClass.getCanonicalName() + " must be implements IRouterAction.";
-                    debugMessage(message);
+                    ModuleUtils.debugMessage(message,debuggable,logger,mApplicationContext);
                     return new RouterForward(new ErrorActionWrapper(), interceptors);
                 }
                 // 创建 RouterAction 实例，并缓存起来
@@ -204,47 +204,11 @@ public class DRouter {
                 cacheRouterActions.put(actionName, actionWrapper);
             } catch (Exception e) {
                 String message = "instance action error: " + e.getMessage();
-                debugMessage(message);
+                ModuleUtils.debugMessage(message,debuggable,logger,mApplicationContext);
                 return new RouterForward(new ErrorActionWrapper(), interceptors);
             }
         }
 
         return new RouterForward(actionWrapper, interceptors);
-    }
-
-    /**
-     * 显示 debug 信息
-     *
-     * @param message
-     */
-    private void debugMessage(String message) {
-        if (debuggable) {
-            logger.e(Consts.TAG, message);
-            showToast(message);
-        }
-    }
-
-    /**
-     * 打印显示 Toast
-     *
-     * @param message
-     */
-    private void showToast(String message) {
-        Toast.makeText(mApplicationContext, message, Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * 根据 moduleName 查询 module 的全类名
-     *
-     * @param moduleName
-     * @return
-     */
-    private String searchModuleClassName(String moduleName) {
-        for (String moduleClassName : mAllModuleClassName) {
-            if (moduleClassName.contains(moduleName)) {
-                return moduleClassName;
-            }
-        }
-        return null;
     }
 }

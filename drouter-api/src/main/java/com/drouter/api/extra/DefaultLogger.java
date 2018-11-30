@@ -5,9 +5,6 @@ import android.util.Log;
 
 /**
  * description:
- * author: Darren on 2018/1/22 10:05
- * email: 240336124@qq.com
- * version: 1.0
  */
 public class DefaultLogger implements ILogger {
     boolean isShowLog = false;

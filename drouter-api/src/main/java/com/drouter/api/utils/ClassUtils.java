@@ -21,9 +21,6 @@ import dalvik.system.DexFile;
 
 /**
  * description: thanks alibaba ARouter
- * author: Darren on 2018/1/23 09:24
- * email: 240336124@qq.com
- * version: 1.0
  */
 public class ClassUtils {
     private static final String EXTRACTED_NAME_EXT = ".classes";
