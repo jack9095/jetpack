@@ -25,7 +25,7 @@ final class BackgroundPoster implements Runnable, Poster {
             queue.enqueue(actionPost);
             if (!executorRunning) {
                 executorRunning = true;
-                PosterSupport.getExecutorService().execute(this);
+                PosterSupport.getExecutorService().execute(this);  // 执行此线程
             }
         }
     }

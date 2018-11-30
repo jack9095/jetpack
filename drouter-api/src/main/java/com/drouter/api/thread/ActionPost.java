@@ -52,7 +52,7 @@ public final class ActionPost {
         this.next = null;
         this.actionCallback = null;
         synchronized (pendingPostPool) {
-            // Don't let the pool grow indefinitely
+            // Don't let the pool grow indefinitely  不要让池子无限增长
             if (pendingPostPool.size() < 10000) {
                 pendingPostPool.add(this);
             }

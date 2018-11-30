@@ -46,7 +46,7 @@ public class HandlerPoster extends Handler implements Poster {
                 RouterResult routerResult = routerAction.invokeAction(actionPost.context, actionPost.params);
                 actionPost.actionCallback.onResult(routerResult);
 
-                actionPost.releasePendingPost();
+                actionPost.releasePendingPost(); // 释放置为空闲状态
 
                 long timeInMethod = SystemClock.uptimeMillis() - started;
                 if (timeInMethod >= maxMillisInsideHandleMessage) {

@@ -1,11 +1,11 @@
 package com.drouter.api.thread;
 
 /**
- * description:
+ * description:  ActionPost队列
  */
 public class ActionPostQueue {
-    private ActionPost head;
-    private ActionPost tail;
+    private ActionPost head;   // 头部
+    private ActionPost tail;   // 尾部
 
     synchronized void enqueue(ActionPost pendingPost) {
         if (pendingPost == null) {
