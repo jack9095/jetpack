@@ -1,10 +1,7 @@
 package com.drouter.api.extra;
 
 /**
- * description:
- * author: Darren on 2018/1/22 10:02
- * email: 240336124@qq.com
- * version: 1.0
+ * description: 日志接口
  */
 public interface ILogger {
     void showLog(boolean isShowLog);

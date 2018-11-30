@@ -4,10 +4,7 @@ import com.drouter.api.action.IRouterAction;
 import com.drouter.base.ThreadMode;
 
 /**
- * description:
- * author: Darren on 2018/1/23 14:22
- * email: 240336124@qq.com
- * version: 1.0
+ * description: Action的包装类
  */
 public class ActionWrapper {
     private Class<? extends IRouterAction> actionClass;

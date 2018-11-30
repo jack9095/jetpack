@@ -11,9 +11,6 @@ import com.drouter.api.thread.PosterSupport;
 
 /**
  * description: 执行 Action 方法的最后一个拦截器
- * author: Darren on 2018/1/24 09:03
- * email: 240336124@qq.com
- * version: 1.0
  */
 public class CallActionInterceptor implements ActionInterceptor {
     @Override

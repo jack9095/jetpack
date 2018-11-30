@@ -8,9 +8,6 @@ import com.drouter.api.result.RouterResult;
 
 /**
  * description:
- * author: Darren on 2018/1/23 17:01
- * email: 240336124@qq.com
- * version: 1.0
  */
 final class BackgroundPoster implements Runnable, Poster {
 

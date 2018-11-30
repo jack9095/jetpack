@@ -6,9 +6,6 @@ import com.drouter.api.result.RouterResult;
 
 /**
  * description: 处理异步
- * author: Darren on 2018/1/23 16:46
- * email: 240336124@qq.com
- * version: 1.0
  */
 public class AsyncPoster implements Runnable, Poster {
 

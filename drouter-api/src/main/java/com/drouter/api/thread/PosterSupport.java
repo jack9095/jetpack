@@ -7,12 +7,10 @@ import java.util.concurrent.Executors;
 
 /**
  * description:
- * author: Darren on 2018/1/23 16:08
- * email: 240336124@qq.com
- * version: 1.0
  */
 public class PosterSupport {
     private static volatile Poster mainPoster, backgroundPoster, asyncPoster;
+    // 创建一个缓存线程池
     private final static ExecutorService DEFAULT_EXECUTOR_SERVICE = Executors.newCachedThreadPool();
 
 

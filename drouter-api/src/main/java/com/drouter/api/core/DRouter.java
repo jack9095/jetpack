@@ -10,9 +10,7 @@ import com.drouter.api.action.IRouterModule;
 import com.drouter.api.exception.InitException;
 import com.drouter.api.extra.ActionWrapper;
 import com.drouter.api.extra.Consts;
-import com.drouter.api.extra.DefaultLogger;
 import com.drouter.api.extra.ErrorActionWrapper;
-import com.drouter.api.extra.ILogger;
 import com.drouter.api.interceptor.ActionInterceptor;
 import com.drouter.api.interceptor.CallActionInterceptor;
 import com.drouter.api.interceptor.ErrorActionInterceptor;
@@ -20,52 +18,17 @@ import com.drouter.api.thread.PosterSupport;
 import com.drouter.api.utils.ClassUtils;
 import com.drouter.api.utils.ModuleUtils;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * description:
  */
-public class DRouter {
-    // 是否被初始化
-    private volatile static boolean hasInit = false;
-    // 是否是 debugable 状态
-    private volatile static boolean debuggable = false;
-    // 日志打印
-    public volatile static ILogger logger = new DefaultLogger();
-    // 缓存的 RouterAction
-    private volatile static Map<String, ActionWrapper> cacheRouterActions = new HashMap();
-    // 缓存的 RouterModule
-    private volatile static Map<String, IRouterModule> cacheRouterModules = new HashMap();
-    // 所有 moudle
-    private static List<String> mAllModuleClassName;
-    private Context mApplicationContext;
-
-    private static List<ActionInterceptor> interceptors = new ArrayList<>();
-
-    public static synchronized void openDebug() {
-        debuggable = true;
-        logger.showLog(true);
-
-        logger.d(Consts.TAG, "DRouter openDebug");
-    }
+public class DRouter extends BaseDRouter {
 
     private volatile static DRouter instance = null;
 
-    public static boolean debuggable() {
-        return debuggable;
-    }
+    private DRouter() { }
 
-    private DRouter() {
-
-    }
-
-    /**
-     * Get instance of router. A
-     * All feature U use, will be starts here.
-     */
     public static DRouter getInstance() {
         if (instance == null) {
             synchronized (DRouter.class) {
@@ -86,7 +49,6 @@ public class DRouter {
         }
 
         hasInit = true;
-
         this.mApplicationContext = context;
         // 获取 com.drotuer.assist 包名下的所有类名信息
         try {
@@ -148,7 +110,7 @@ public class DRouter {
         // 1. 动态先查找加载 Module
         // actionName 的格式必须是 xxx/xxx
         if (!actionName.contains("/")) {  // 中断，去中转
-            String message = "action name  format error -> <" + actionName + ">, like: moduleName/actionName";
+            String message = "action name format error -> <" + actionName + ">, like: moduleName/actionName";
             ModuleUtils.debugMessage(message,debuggable,logger,mApplicationContext);
             return new RouterForward(new ErrorActionWrapper(), interceptors);
         }

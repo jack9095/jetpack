@@ -6,9 +6,6 @@ import java.util.List;
 
 /**
  * description:
- * author: Darren on 2018/1/24 09:38
- * email: 240336124@qq.com
- * version: 1.0
  */
 public class ActionInterceptorChain implements ActionInterceptor.ActionChain {
     // 是否被拦截了

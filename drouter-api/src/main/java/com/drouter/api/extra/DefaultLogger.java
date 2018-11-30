@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 /**
- * description:
+ * description:  默认的日志类
  */
 public class DefaultLogger implements ILogger {
     boolean isShowLog = false;

@@ -1,19 +1,14 @@
 package com.drouter.api.thread;
 
 import android.content.Context;
-
 import com.drouter.api.extra.ActionWrapper;
 import com.drouter.api.result.ActionCallback;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * description:
- * author: Darren on 2018/1/23 16:11
- * email: 240336124@qq.com
- * version: 1.0
  */
 public final class ActionPost {
     private final static List<ActionPost> pendingPostPool = new ArrayList<ActionPost>();
@@ -47,6 +42,10 @@ public final class ActionPost {
         return new ActionPost(actionWrapper, context, params, actionCallback);
     }
 
+    /**
+     * 释放post
+     * 置为空闲状态
+     */
     public void releasePendingPost() {
         this.context = null;
         this.actionWrapper = null;
