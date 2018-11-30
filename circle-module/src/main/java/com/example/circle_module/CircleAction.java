@@ -12,9 +12,6 @@ import java.util.Map;
 
 /**
  * description:
- * author: Darren on 2018/1/22 10:57
- * email: 240336124@qq.com
- * version: 1.0
  */
 @Action(path = "circlemodule/test", threadMode = ThreadMode.MAIN)
 public class CircleAction implements IRouterAction {

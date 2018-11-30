@@ -1,9 +1,12 @@
 package com.drouter.api.core;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
+import android.util.Log;
+
 import com.drouter.api.action.IRouterAction;
 import com.drouter.api.action.IRouterInterceptor;
 import com.drouter.api.action.IRouterModule;
@@ -53,6 +56,7 @@ public class DRouter extends BaseDRouter {
         // 获取 com.drotuer.assist 包名下的所有类名信息
         try {
             mAllModuleClassName = ClassUtils.getFileNameByPackageName(context, Consts.ROUTER_MODULE_PACK_NAME);
+            Log.e("全类名集合 = ",mAllModuleClassName.toString());
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -106,6 +110,7 @@ public class DRouter extends BaseDRouter {
      * @param actionName
      * @return
      */
+    @SuppressLint("LongLogTag")
     public RouterForward action(String actionName) {
         // 1. 动态先查找加载 Module
         // actionName 的格式必须是 xxx/xxx
@@ -118,9 +123,10 @@ public class DRouter extends BaseDRouter {
         // 2.获取 moduleName，实例化 Module，并缓存
         String moduleName = actionName.split("/")[0];
         String moduleClassName = ModuleUtils.searchModuleClassName(moduleName,mAllModuleClassName);
+        Log.e("Drouter  ----> 全类名 moduleClassName = ",moduleClassName);
         if (TextUtils.isEmpty(moduleClassName)) {
             String message = String.format("Please check to the action name is correct: according to the <%s> cannot find module %s.", actionName, moduleName);
-            ModuleUtils.debugMessage(message,debuggable,this.logger,this.mApplicationContext);
+            ModuleUtils.debugMessage(message,debuggable,logger,mApplicationContext);
             return new RouterForward(new ErrorActionWrapper(), interceptors);
         }
         IRouterModule routerModule = cacheRouterModules.get(moduleClassName);
@@ -140,7 +146,7 @@ public class DRouter extends BaseDRouter {
         // 3. 从 Module 中获取 ActionWrapper 类名，然后创建缓存 ActionWrapper
         ActionWrapper actionWrapper = cacheRouterActions.get(actionName);
         if (actionWrapper == null) {
-            actionWrapper = routerModule.findAction(actionName);
+            actionWrapper = routerModule.findAction(actionName);  // 根据action名称找到action
         } else {
             return new RouterForward(actionWrapper, interceptors);
         }
@@ -152,7 +158,7 @@ public class DRouter extends BaseDRouter {
         }
 
         Class<? extends IRouterAction> actionClass = actionWrapper.getActionClass();
-        IRouterAction routerAction = actionWrapper.getRouterAction();
+        IRouterAction routerAction = actionWrapper.getRouterAction();  // 不为空说明对应的注解类实现了接口 IRouterAction
         if (routerAction == null) {
             try {
                 if (!IRouterAction.class.isAssignableFrom(actionClass)) {

@@ -37,7 +37,7 @@ public class BaseDRouter {
      */
     protected volatile static Map<String, IRouterModule> cacheRouterModules = new HashMap<>();
     /**
-     * 所有 moudle
+     * 所有 moudle全类名
      */
     protected static List<String> mAllModuleClassName;
     /**
