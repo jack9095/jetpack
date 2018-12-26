@@ -10,12 +10,7 @@ import com.drouter.api.core.DRouter;
 import com.drouter.api.result.ActionCallback;
 import com.drouter.api.result.RouterResult;
 
-/**
- * description:
- * author: Darren on 2018/1/22 09:43
- * email: 240336124@qq.com
- * version: 1.0
- */
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
